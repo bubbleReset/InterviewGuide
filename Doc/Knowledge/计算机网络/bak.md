@@ -444,50 +444,6 @@ HTTP 协议中没有明确说明 POST 会产生两个 TCP 数据包，而且实�
 
 所以，header 和 body 分开发送是部分浏览器或框架的请求方法，不属于 post 必然行为。
 
-<p  id="Session是什么"></p>
-
-#### 40、Session是什么？
-
-除了可以将用户信息通过 Cookie 存储在用户浏览器中，也可以利用 Session 存储在服务器端，存储在服务器端的信息更加安全。
-
-Session 可以存储在服务器上的文件、数据库或者内存中。也可以将 Session 存储在 Redis 这种内存型数据库中，效率会更高。
-
-<p  id="使用Session的过程是怎样的"></p>
-
-#### 41、使用 Session 的过程是怎样的？
-
-过程如下：
-
-- 用户进行登录时，用户提交包含用户名和密码的表单，放入 HTTP 请求报文中；
-- 服务器验证该用户名和密码，如果正确则把用户信息存储到 Redis 中，它在 Redis 中的 Key 称为 Session ID；
-- 服务器返回的响应报文的 Set-Cookie 首部字段包含了这个 Session ID，客户端收到响应报文之后将该 Cookie 值存入浏览器中；
-- 客户端之后对同一个服务器进行请求时会包含该 Cookie 值，服务器收到之后提取出 Session ID，从 Redis 中取出用户信息，继续之前的业务操作。
-
-**注意**：Session ID 的安全性问题，不能让它被恶意攻击者轻易获取，那么就不能产生一个容易被猜到的 Session ID 值。此外，还需要经常重新生成 Session ID。在对安全性要求极高的场景下，例如转账等操作，除了使用 Session 管理用户状态之外，还需要对用户进行重新验证，比如重新输入密码，或者使用短信验证码等方式。
-
-<p  id="Session和cookie应该如何去选择适用场景"></p>
-
-#### 42、Session和cookie应该如何去选择（适用场景）？
-
-- Cookie 只能存储 ASCII 码字符串，而 Session 则可以存储任何类型的数据，因此在考虑数据复杂性时首选 Session；
-- Cookie 存储在浏览器中，容易被恶意查看。如果非要将一些隐私数据存在 Cookie 中，可以将 Cookie 值进行加密，然后在服务器进行解密；
-- 对于大型网站，如果用户所有的信息都存储在 Session 中，那么开销是非常大的，因此不建议将所有的用户信息都存储到 Session 中。
-
-<p  id="Cookies和Session区别是什么"></p>
-
-#### 43、Cookies和Session区别是什么？
-
-Cookie和Session都是客户端与服务器之间保持状态的解决方案
-1，存储的位置不同，cookie：存放在客户端，session：存放在服务端。Session存储的数据比较安全
-2，存储的数据类型不同
-两者都是key-value的结构，但针对value的类型是有差异的
-cookie：value只能是字符串类型，session：value是Object类型
-3，存储的数据大小限制不同
-cookie：大小受浏览器的限制，很多是是4K的大小， session：理论上受当前内存的限制，
-4，生命周期的控制
-cookie的生命周期当浏览器关闭的时候，就消亡了
-(1)cookie的生命周期是累计的，从创建时，就开始计时，20分钟后，cookie生命周期结束，
-(2)session的生命周期是间隔的，从创建时，开始计时如在20分钟，没有访问session，那么session生命周期被销毁
 
 <p  id="DDos攻击了解吗"></p>
 
